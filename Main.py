@@ -6,7 +6,7 @@ from pause_menu import PauseMenu
 
 # Initialize Pygame
 pygame.init()
-#test edw 123
+#test edw 123456
 # Set screen dimensions and title
 screen = pygame.display.set_mode((1024, 640))
 pygame.display.set_caption("Reverse G")
