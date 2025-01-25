@@ -1,5 +1,6 @@
 import pygame
 import sys
+from scoreCls import scoreCls  
 
 class MainMenu:
     def __init__(self, screen):
@@ -7,7 +8,11 @@ class MainMenu:
         self.background = pygame.image.load('assets/images/menuBck.jpg')  # Load background image
         self.font = pygame.font.SysFont("Comic Sans MS", 40)  # Comic font for game title
         self.button_font = pygame.font.SysFont("Arial", 30)  # Regular font for buttons
+        self.text_color = (255, 255, 255)  # White text color
         self.running = True
+       
+         # Initialize JSONManager for handling scores
+        self.scoreCls = scoreCls()  # Add this line
 
         # Colors
         self.title_color = (255, 0, 0)  # Red for "REVERSE G"
@@ -81,6 +86,51 @@ class MainMenu:
         # Draw difficulty text inside the box
         self.screen.blit(diff_text, (text_x, text_y))
 
+    def show_scores(self):
+        """Display the top 20 scores."""
+        self.screen.fill((0, 0, 0))  # Clear the screen with black background
+
+        # Load top 20 scores from JSONManager
+        top_scores = self.scoreCls.get_top_scores(top_n=20)
+
+        # Display title
+        title_text = self.font.render("Top 20 Scores", True, self.text_color)
+        title_rect = title_text.get_rect(center=(self.screen.get_width() // 2, 50))
+        self.screen.blit(title_text, title_rect)
+
+        # Check if there are scores to display
+        if not top_scores:
+            no_scores_text = self.button_font.render("No scores available", True, (255, 255, 255))
+            no_scores_rect = no_scores_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+            self.screen.blit(no_scores_text, no_scores_rect)
+        else:
+        # Display each score
+            y_offset = 120
+        for rank, score_entry in enumerate(top_scores, start=1):
+            score_text = self.button_font.render(
+                f"{rank}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['time_survived']}s",
+                True,
+                (255, 255, 255),
+            )
+            self.screen.blit(score_text, (50, y_offset))
+            y_offset += 40
+
+         # Display "Press ESC to return" at the bottom
+        return_text = self.button_font.render("Press ESC to return", True, (255, 255, 255))
+        self.screen.blit(return_text, (self.screen.get_width() // 2 - return_text.get_width() // 2, self.screen.get_height() - 50))
+
+        pygame.display.update()
+
+        # Wait for user to press ESC to return to the menu
+        while True:
+            for event in pygame.event.get():
+               if event.type == pygame.QUIT:
+                   pygame.quit()
+                   sys.exit()
+               if event.type == pygame.KEYDOWN:
+                     if event.key == pygame.K_ESCAPE:  # ESC to return to main menu
+                         return
+
     def run(self):
         self.draw()
         pygame.display.update()
@@ -96,7 +146,7 @@ class MainMenu:
                         return 1  # Go to gameplay
                     elif event.key == pygame.K_2:  # 2 Players selected
                         return 1  # Go to multiplayer gameplay (same as 1 Player for now)
-                    elif event.key == pygame.K_3:  # Scoreboard selected
-                        return 0  # Go to scoreboard screen
+                    elif event.key == pygame.K_s:  # Scoreboard selected
+                        self.show_scores()  # Show the scores
                     if event.key == pygame.K_ESCAPE:
                         return 0  # Exit game or go back
