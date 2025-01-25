@@ -6,7 +6,14 @@ from pause_menu import PauseMenu
 
 # Initialize Pygame
 pygame.init()
-#test edw 123
+
+# Initialize the mixer for background music
+pygame.mixer.init()
+
+# Load and play the background music (loop it indefinitely)
+pygame.mixer.music.load('assets/music/background_music.mp3')  # Make sure to provide correct path
+pygame.mixer.music.play(-1, 0.0)  # Loop music indefinitely
+
 # Set screen dimensions and title
 screen = pygame.display.set_mode((1024, 640))
 pygame.display.set_caption("Reverse G")

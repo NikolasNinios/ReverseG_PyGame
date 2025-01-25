@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Charlie",
+        "score": 100,
+        "time_survived": 25
+    },
+    {
+        "name": "Alice",
+        "score": 120,
+        "time_survived": 30
+    },
+    {
+        "name": "Bob",
+        "score": 150,
+        "time_survived": 45
+    },
+    {
+        "name": "Charlie",
+        "score": 100,
+        "time_survived": 25
+    },
+    {
+        "name": "Alice",
+        "score": 120,
+        "time_survived": 30
+    },
+    {
+        "name": "Bob",
+        "score": 150,
+        "time_survived": 45
+    },
+    {
+        "name": "Charlie",
+        "score": 100,
+        "time_survived": 25
+    }
+]

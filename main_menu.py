@@ -1,6 +1,7 @@
 import pygame
 import sys
 from scoreCls import scoreCls  
+import globals  # Import your global variables and functions
 
 class MainMenu:
     def __init__(self, screen):
@@ -16,6 +17,8 @@ class MainMenu:
 
         # Colors
         self.title_color = (255, 0, 0)  # Red for "REVERSE G"
+        self.default_color = (255, 255, 255)  # White
+        self.selected_color = (0, 0, 255)  # Blue for selected difficulty
         self.box_color = (64, 224, 208)  # Turquoise for the box
         self.diff_box_color = (135, 206, 235)  # Light turquoise for difficulty box
 
@@ -68,23 +71,39 @@ class MainMenu:
         self.screen.blit(scoreboard_text, (menu_box_x + (menu_box_width - scoreboard_text.get_width()) // 2, menu_box_y + vertical_spacing + play_text.get_height() + multiplayer_text.get_height() + 2 * vertical_spacing))
 
        # Draw a separate box for difficulty options
-        diff_text = self.button_font.render("Mars(M), Earth(E), Jupiter(J)", True, (255, 255, 255))
-        diff_box_width = diff_text.get_width() + 40
-        diff_box_height = diff_text.get_height() + 20
+       # Define difficulty options
+        difficulty_options = ['Mars(M)', 'Earth(E)', 'Jupiter(J)']
 
+        # Calculate the total width based on the actual size of the text for each difficulty
+        total_width = sum([self.button_font.render(option, True, self.default_color).get_width() for option in difficulty_options]) + (len(difficulty_options) - 1) * 20
+
+        # Set the height and width of the box for difficulty
+        diff_box_height = 50  # Adjusted height for the difficulty box
+    
         # Center the box at the bottom of the screen
-        box_x = self.screen.get_width() // 2 - diff_box_width // 2
+        box_x = self.screen.get_width() // 2 - total_width // 2  # Center horizontally for the 3 options
         box_y = self.screen.get_height() - diff_box_height - 20  # Slight padding from bottom
 
-        # Draw the rounded box
-        self.draw_rounded_box(box_x, box_y, diff_box_width, diff_box_height, 30, self.box_color)
+        # Draw the rounded box for difficulty
+        self.draw_rounded_box(box_x - 10, box_y, total_width + 20, diff_box_height, 30, self.box_color)
 
-        # Center the text inside the box
-        text_x = self.screen.get_width() // 2 - diff_text.get_width() // 2
-        text_y = box_y + (diff_box_height - diff_text.get_height()) // 2  # Center text vertically in the box
+        # Y offset to place each difficulty option one below the other
+        x_offset = box_x 
 
-        # Draw difficulty text inside the box
-        self.screen.blit(diff_text, (text_x, text_y))
+        # Draw each difficulty option, change its color if it is selected
+        for option in difficulty_options:
+            # If the option is selected, change its color to blue
+            if globals.difficulty == option:
+                difficulty_text = self.button_font.render(option, True, self.selected_color)
+            else:
+                difficulty_text = self.button_font.render(option, True, self.default_color)
+
+            # Draw the difficulty text at the correct position
+            self.screen.blit(difficulty_text, (x_offset, box_y + (diff_box_height - difficulty_text.get_height()) // 2))
+
+            # Update x_offset to position the next option next to the previous one
+            x_offset += difficulty_text.get_width() + 20  # Adjust spacing between options (20 pixels)
+
 
     def show_scores(self):
         """Display the top 20 scores."""
@@ -104,18 +123,26 @@ class MainMenu:
             no_scores_rect = no_scores_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
             self.screen.blit(no_scores_text, no_scores_rect)
         else:
-        # Display each score
-            y_offset = 120
-        for rank, score_entry in enumerate(top_scores, start=1):
-            score_text = self.button_font.render(
-                f"{rank}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['time_survived']}s",
-                True,
-                (255, 255, 255),
-            )
-            self.screen.blit(score_text, (50, y_offset))
-            y_offset += 40
+            left_x = 50  # Starting x position for the left column
+            right_x = self.screen.get_width() // 2 + 50  # Starting x position for the right column
+            y_offset = 120  # Starting y position for both columns
+            line_spacing = 40  # Space between each score
 
-         # Display "Press ESC to return" at the bottom
+            # Iterate over the scores and split them into two columns
+            for index, score_entry in enumerate(top_scores):
+                score_text = self.button_font.render(
+                    f"{index + 1}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['time_survived']}s",
+                    True,
+                    (255, 255, 255),  # White color
+                )
+
+            # Determine if the score should go in the left or right column
+                if index < 10:  # First 10 scores go to the left column
+                   self.screen.blit(score_text, (left_x, y_offset + index * line_spacing))
+                else:  # Remaining scores go to the right column
+                   self.screen.blit(score_text, (right_x, y_offset + (index - 10) * line_spacing))
+
+        # Display "Press ESC to return" at the bottom
         return_text = self.button_font.render("Press ESC to return", True, (255, 255, 255))
         self.screen.blit(return_text, (self.screen.get_width() // 2 - return_text.get_width() // 2, self.screen.get_height() - 50))
 
@@ -129,7 +156,13 @@ class MainMenu:
                    sys.exit()
                if event.type == pygame.KEYDOWN:
                      if event.key == pygame.K_ESCAPE:  # ESC to return to main menu
-                         return
+                         return 
+
+    def gameDiff(self,difficulty):   
+        """Update difficulty variable and highlight the selected difficulty."""
+        globals.set_difficulty(difficulty)  # Update the global variable
+
+    
 
     def run(self):
         self.draw()
@@ -148,5 +181,15 @@ class MainMenu:
                         return 1  # Go to multiplayer gameplay (same as 1 Player for now)
                     elif event.key == pygame.K_s:  # Scoreboard selected
                         self.show_scores()  # Show the scores
+                        return 0
+                    elif event.key == pygame.K_m:
+                        self.gameDiff("Mars(M)")
+                        return 0
+                    elif event.key == pygame.K_e:
+                        self.gameDiff("Earth(E)")
+                        return 0
+                    elif event.key == pygame.K_j:
+                        self.gameDiff("Jupiter(J)")
+                        return 0
                     if event.key == pygame.K_ESCAPE:
                         return 0  # Exit game or go back
