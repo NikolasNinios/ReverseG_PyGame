@@ -10,9 +10,15 @@ pygame.init()
 # Initialize the mixer for background music
 pygame.mixer.init()
 
-# Load and play the background music (loop it indefinitely)
-pygame.mixer.music.load('assets/music/background_music.mp3')  # Make sure to provide correct path
-pygame.mixer.music.play(-1, 0.0)  # Loop music indefinitely
+try:
+    # Load and play the background music (loop it indefinitely)
+    pygame.mixer.music.load('assets/music/spacemusic.wav')  # Make sure to provide correct path
+    pygame.mixer.music.play(-1, 0.0)  # Loop music indefinitely
+except pygame.error as e:
+    print(f"Error loading music: {e}")
+    #pygame.quit()
+    #sys.exit()
+
 
 # Set screen dimensions and title
 screen = pygame.display.set_mode((1024, 640))

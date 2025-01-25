@@ -72,7 +72,7 @@ class MainMenu:
 
        # Draw a separate box for difficulty options
        # Define difficulty options
-        difficulty_options = ['Mars(M)', 'Earth(E)', 'Jupiter(J)']
+        difficulty_options = ['Mars(A)', 'Earth(E)', 'Jupiter(J)']
 
         # Calculate the total width based on the actual size of the text for each difficulty
         total_width = sum([self.button_font.render(option, True, self.default_color).get_width() for option in difficulty_options]) + (len(difficulty_options) - 1) * 20
@@ -103,6 +103,8 @@ class MainMenu:
 
             # Update x_offset to position the next option next to the previous one
             x_offset += difficulty_text.get_width() + 20  # Adjust spacing between options (20 pixels)
+
+        globals.draw_mute_icon(self.screen, globals.music_muted)
 
 
     def show_scores(self):
@@ -176,20 +178,25 @@ class MainMenu:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:  # 1 Player selected
+                        globals.playersmode(1)
                         return 1  # Go to gameplay
                     elif event.key == pygame.K_2:  # 2 Players selected
+                        globals.playersmode(2)
                         return 1  # Go to multiplayer gameplay (same as 1 Player for now)
                     elif event.key == pygame.K_s:  # Scoreboard selected
                         self.show_scores()  # Show the scores
                         return 0
-                    elif event.key == pygame.K_m:
-                        self.gameDiff("Mars(M)")
+                    elif event.key == pygame.K_a:
+                        self.gameDiff("Mars(A)")
                         return 0
                     elif event.key == pygame.K_e:
                         self.gameDiff("Earth(E)")
                         return 0
                     elif event.key == pygame.K_j:
                         self.gameDiff("Jupiter(J)")
+                        return 0
+                    elif event.key == pygame.K_m:
+                        globals.toggle_music()                       
                         return 0
                     if event.key == pygame.K_ESCAPE:
                         return 0  # Exit game or go back
