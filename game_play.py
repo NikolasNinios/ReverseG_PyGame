@@ -228,22 +228,22 @@ class GamePlay:
             # Apply gravity to make the player move up or down
                 if self.gravity_state == self.gravity:  # Gravity pulling down
                     self.player_velocity += self.gravity  # Increase velocity by gravity value
-                    if self.player_velocity > 10:  # Cap the velocity
-                        self.player_velocity = 10
+                    if self.player_velocity > 8:  # Cap the velocity
+                        self.player_velocity = 8
                 elif self.gravity_state == self.gravity_reversed:  # Gravity pulling up
                     self.player_velocity -= self.gravity  # Decrease velocity by gravity value
-                    if self.player_velocity < -10:  # Cap the velocity (negative for reversed gravity)
-                        self.player_velocity = -10
+                    if self.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
+                        self.player_velocity = -8
             else:
                 self.frames_on_platform -=1
 
                 if self.is_falling:
-                    if self.frames_on_platform <= 0:
+                    if self.frames_on_platform+8 <= 0:
                         self.player_on_object = False
                         self.player_velocity = 0.3  # Set velocity to falling (positive velocity)
                         self.frames_on_platform = 0  # Reset frames
                 else:
-                    if self.frames_on_platform <= 0:
+                    if self.frames_on_platform+8 <= 0:
                         self.player_on_object = False
                         self.player_velocity = -0.3  # Set velocity to floating (negative velocity)
                         self.frames_on_platform = 0  # Reset frames 
