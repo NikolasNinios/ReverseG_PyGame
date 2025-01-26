@@ -17,6 +17,8 @@ class GamePlay:
         self.gravity = 0.3  # Gravity pulling downwards
         self.gravity_reversed = -0.3  # Gravity pulling upwards
         self.gravity_state = self.gravity  # Default gravity is pulling downwards
+        self.start_flag=1
+        self.player_on_object=False
 
         self.is_falling = False  # Is the player falling?
         #self.ground_y = self.screen.get_height() - self.player_size
@@ -89,39 +91,29 @@ class GamePlay:
         return time_left
     
     def handle_collisions(self):
-        """Handles collisions between the player and platforms."""
         player_rect = pygame.Rect(self.player_x, self.player_y, self.player_size, self.player_size)
-        self.is_falling = True  # Assume falling unless proven otherwise
 
+        if self.player_velocity > 0:  # Falling
+            for platform in self.platforms:
+                platform_rect = platform
+                if player_rect.bottom  <= platform_rect.top + 10:
+                    if player_rect.bottom + 10 >= platform_rect.top:
+                        self.player_y = platform_rect.top - self.player_size  # Align player on top of the platform
+                        self.player_velocity = 0  # Stop movement
+                        self.player_on_object = True  # Mark as standing on a platform
+                        return  # Exit once collision is handled
+                
+        elif self.player_velocity < 0:  # Moving upwards
+            for platform in self.platforms:
+                platform_rect = platform
+                if player_rect.top >= platform_rect.bottom - 10:
+                    if player_rect.top - 10 <= platform_rect.bottom:
+                        self.player_y = platform_rect.bottom  # Align player below the platform
+                        self.player_velocity = 0  # Stop movement
+                        self.player_on_object = True  # Mark as standing under a platform
+                        return  # Exit once collision is handled
 
-        # Check for collisions with platforms
-        # Assume the player is falling until proven otherwise
-        #self.is_falling = True  
-        for platform in self.platforms:
-            if player_rect.colliderect(platform):
-                if self.is_falling and self.gravity_state == self.gravity:  # Falling down to the platform
-                    # Stop at the platform's top if gravity is normal
-                    self.player_y = platform.top - self.player_size
-                    self.player_velocity = 0  # Stop the falling velocity
-                    self.is_falling = False  # Player is no longer falling
-                    break  # Exit after the first collision with a platform
-                elif self.is_falling and self.gravity_state == self.gravity_reversed:  # Falling up (gravity reversed)
-                    # Stop at the platform's bottom if gravity is reversed
-                    self.player_y = platform.bottom
-                    self.player_velocity = 0  # Stop the rising velocity
-                    self.is_falling = True  # Player is no longer falling
-                    break  # Exit after the first collision with a platform
-            else:
-                # If no collision, the player is falling
-                self.is_falling = True
-
-        # After checking collisions, apply gravity only if not on a platform
-        #if self.is_falling:
-         # Apply gravity when in the air (either falling down or rising up)
-         #   if self.gravity_state == self.gravity:
-          #     self.player_velocity += self.gravity  # Falling down
-           # elif self.gravity_state == self.gravity_reversed:
-            #   self.player_velocity -= self.gravity  # Moving upwards
+     
             
     def update_gravity(self):
         """Handles gravity change only when spacebar is pressed."""
@@ -142,24 +134,32 @@ class GamePlay:
                     elif event.key == pygame.K_ESCAPE:  # Press 'Escape' to go to main menu
                         return 0  # Exit game and go back to main menu
                     elif event.key == pygame.K_SPACE and not self.is_falling:  # Change gravity when on platform
-                        if not self.is_falling:
+                        if self.player_on_object:                       
                             self.update_gravity()
+                            self.player_on_object=False
 
+            if self.start_flag == 0:
             # Handle player collision with platforms (player stops at platform)
-            self.handle_collisions()
+                if not self.player_velocity == 0:
+                    self.handle_collisions()
+            else:
+                self.start_flag = 0
+            
 
+            if not  self.player_on_object: 
             # Apply gravity to make the player move up or down
-            if self.gravity_state == self.gravity:  # Gravity pulling down
-                self.player_velocity += self.gravity  # Increase velocity by gravity value
-                if self.player_velocity > 10:  # Cap the velocity
-                    self.player_velocity = 10
-            elif self.gravity_state == self.gravity_reversed:  # Gravity pulling up
-                 self.player_velocity -= self.gravity  # Decrease velocity by gravity value
-                 if self.player_velocity < -10:  # Cap the velocity (negative for reversed gravity)
-                    self.player_velocity = -10
+                if self.gravity_state == self.gravity:  # Gravity pulling down
+                    self.player_velocity += self.gravity  # Increase velocity by gravity value
+                    if self.player_velocity > 10:  # Cap the velocity
+                        self.player_velocity = 10
+                elif self.gravity_state == self.gravity_reversed:  # Gravity pulling up
+                    self.player_velocity -= self.gravity  # Decrease velocity by gravity value
+                    if self.player_velocity < -10:  # Cap the velocity (negative for reversed gravity)
+                        self.player_velocity = -10
 
             # Update the player's position based on velocity
-            self.player_y += self.player_velocity
+            if not self.player_on_object:
+                self.player_y += self.player_velocity
 
             # Draw the game elements
             self.draw()
