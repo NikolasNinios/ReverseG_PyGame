@@ -20,6 +20,18 @@ class GamePlay:
         self.gravity = 0.3  # Gravity pulling downwards
         self.gravity_reversed = -0.3  # Gravity pulling upwards
         self.gravity_state = self.gravity  # Default gravity is pulling downwards
+        #self.start_flag=1
+        #self.player_on_object=False
+
+        self.player_size2 = 30
+        self.player_x2 = (self.screen.get_width() * 2 // 6 ) -35 # Starting X position (2/5th of the width)
+        self.player_y2 = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+        self.player_velocity2 = 0  # Starting velocity (no initial speed)
+        self.gravity2 = 0.3  # Gravity pulling downwards
+        self.gravity_reversed2 = -0.3  # Gravity pulling upwards
+        self.gravity_state2 = self.gravity2  # Default gravity is pulling downwards
+
+
         self.start_flag=1
         self.player_on_object=False
 
@@ -108,7 +120,7 @@ class GamePlay:
             max_horizontal_distance = relative_velocity * max(fall_time, jump_time)  # Pixels the player can cover horizontally
 
             # Calculate where the next platform should be placed
-            platform_x = last_platform_end_x + max_horizontal_distance +30  # Add the max horizontal distance
+            platform_x = last_platform_end_x + max_horizontal_distance +40  # Add the max horizontal distance
 
 
             # Calculate the next platform's x-coordinate
@@ -119,7 +131,7 @@ class GamePlay:
             #gap = 100  # Fixed gap between platforms
             
             #platform_x = last_platform_end_x + gap  # Add 50 pixels gap
-            platform_x = min(platform_x, self.screen.get_width())
+            #platform_x = min(platform_x, self.screen.get_width())
 
             #platform_x = last_platform_end_x + horizontal_gap  # Ensure platform is placed at least 200 pixels away from the last one
         
@@ -182,6 +194,8 @@ class GamePlay:
                 
         # Draw player (as a red box)
         pygame.draw.rect(self.screen, (255, 0, 0), (self.player_x, self.player_y, self.player_size, self.player_size))
+         # Draw player2 (as a green box)
+        pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x2, self.player_y2, self.player_size2, self.player_size2))
 
         # Draw the platforms (as blue boxes)
         for platform in self.platforms:
@@ -207,8 +221,8 @@ class GamePlay:
         if self.player_velocity > 0:  # Falling
             for platform in self.platforms:
                 platform_rect = platform
-                if player_rect.bottom  <= platform_rect.top + 10:
-                    if player_rect.bottom + 10 >= platform_rect.top:        #300
+                if player_rect.bottom  <= platform_rect.top + 15:
+                    if player_rect.bottom + 15 >= platform_rect.top:        #300
                         if player_rect.right >= platform_rect.left  and player_rect.left <= platform_rect.right :
                             self.player_y = platform_rect.top - self.player_size  # Align player on top of the platform
                             self.player_velocity = 0  # Stop movement
@@ -236,8 +250,8 @@ class GamePlay:
         elif self.player_velocity < 0:  # Moving upwards
             for platform in self.platforms:
                 platform_rect = platform
-                if player_rect.top >= platform_rect.bottom - 10:
-                    if player_rect.top - 10 <= platform_rect.bottom:
+                if player_rect.top >= platform_rect.bottom - 15:
+                    if player_rect.top - 15 <= platform_rect.bottom:
                         if player_rect.right >= platform_rect.left  and player_rect.left <= platform_rect.right :
                             self.player_y = platform_rect.bottom  # Align player below the platform
                             self.player_velocity = 0  # Stop movement
@@ -301,11 +315,11 @@ class GamePlay:
                 if self.gravity_state == self.gravity:  # Gravity pulling down
                     self.player_velocity += self.gravity  # Increase velocity by gravity value
                     if self.player_velocity > 8:  # Cap the velocity
-                        self.player_velocity = 8
+                        self.player_velocity = 7.7
                 elif self.gravity_state == self.gravity_reversed:  # Gravity pulling up
                     self.player_velocity -= self.gravity  # Decrease velocity by gravity value
                     if self.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
-                        self.player_velocity = -8
+                        self.player_velocity = -7.7
             else:
                 self.frames_on_platform -=1
 
