@@ -12,7 +12,7 @@ pygame.mixer.init()
 
 try:
     # Load and play the background music (loop it indefinitely)
-    pygame.mixer.music.load('assets/music/spacemusic.wav')  # Make sure to provide correct path
+    #pygame.mixer.music.load('assets/music/spacemusic.wav')  # Make sure to provide correct path
     pygame.mixer.music.play(-1, 0.0)  # Loop music indefinitely
 except pygame.error as e:
     print(f"Error loading music: {e}")
@@ -29,7 +29,7 @@ MENU = 0
 PLAY = 1
 PAUSE = 2
 
-current_state = MENU
+current_state = PLAY
 
 # Set the FPS limit (e.g., 60 frames per second)
 #fps = 60

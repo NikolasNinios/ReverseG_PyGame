@@ -103,7 +103,8 @@ class MainMenu:
 
             # Update x_offset to position the next option next to the previous one
             x_offset += difficulty_text.get_width() + 20  # Adjust spacing between options (20 pixels)
-
+            
+        globals.toggle_music() 
         globals.draw_mute_icon(self.screen, globals.music_muted)
 
 
@@ -169,7 +170,7 @@ class MainMenu:
     def run(self):
         self.draw()
         pygame.display.update()
-
+        
         # Event loop for menu navigation
         while self.running:
             for event in pygame.event.get():
