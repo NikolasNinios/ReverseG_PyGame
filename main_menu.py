@@ -104,7 +104,7 @@ class MainMenu:
             # Update x_offset to position the next option next to the previous one
             x_offset += difficulty_text.get_width() + 20  # Adjust spacing between options (20 pixels)
             
-        globals.toggle_music() 
+        #globals.toggle_music() 
         globals.draw_mute_icon(self.screen, globals.music_muted)
 
 
