@@ -328,8 +328,11 @@ class GamePlay:
         self.draw_text('Player 1 changes gravity with "R"', self.screen.get_height() // 2 - 50)
         if self.SecondPlayer:
             self.draw_text('Player 2 changes gravity with "B"', self.screen.get_height() // 2)
-        
-        self.draw_text('Press any key to start', self.screen.get_height() // 2 + 50)
+            self.draw_text('"P" Pause The Game', self.screen.get_height() // 2+50)
+            self.draw_text('Press any key to start', self.screen.get_height() // 2 + 100)
+        else:
+            self.draw_text('"P" Pause The Game', self.screen.get_height() // 2)
+            self.draw_text('Press any key to start', self.screen.get_height() // 2 + 50)
 
         pygame.display.update()
 
