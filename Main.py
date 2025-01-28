@@ -27,7 +27,7 @@ pygame.display.set_caption("Reverse G")
 # Game states
 MENU = 0
 PLAY = 1
-PAUSE = 2
+RESULTS = 2
 
 current_state = MENU
 
@@ -50,7 +50,7 @@ def game_loop():
         current_state = game_play.run()
     
     # Pause menu
-    elif current_state == PAUSE:
+    elif current_state == RESULTS:
         pause_menu = PauseMenu(screen)
         current_state = pause_menu.run()
 

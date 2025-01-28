@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import math
+from playerCls import playerCls 
 
 class GamePlay:
     def __init__(self, screen):
@@ -12,30 +13,40 @@ class GamePlay:
         self.running = True
         self.test123 = True
         self.testfrist = True
+        self.start_flag = 1 
+        self.paused = False
+
+        #self.player_on_object= False # check if player is on object so he can jump
+        #self.is_falling = True
+        
+
+        self.player = playerCls(self.screen)
+        
+
         # Player settings
-        self.player_size = 30
-        self.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
-        self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
-        self.player_velocity = 0  # Starting velocity (no initial speed)
-        self.gravity = 0.3  # Gravity pulling downwards
-        self.gravity_reversed = -0.3  # Gravity pulling upwards
-        self.gravity_state = self.gravity  # Default gravity is pulling downwards
+        #self.player_size = 30
+        #self.player.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
+        #self.player.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+        #self.player_velocity = 0  # Starting velocity (no initial speed)
+        #self.gravity = 0.3  # Gravity pulling downwards
+        #self.gravity_reversed = -0.3  # Gravity pulling upwards
+        #self.gravity_state = self.gravity  # Default gravity is pulling downwards
         #self.start_flag=1
         #self.player_on_object=False
 
-        self.player_size2 = 30
-        self.player_x2 = (self.screen.get_width() * 2 // 6 ) -35 # Starting X position (2/5th of the width)
-        self.player_y2 = self.screen.get_height() // 2  # Start in the middle of the screen vertically
-        self.player_velocity2 = 0  # Starting velocity (no initial speed)
-        self.gravity2 = 0.3  # Gravity pulling downwards
-        self.gravity_reversed2 = -0.3  # Gravity pulling upwards
-        self.gravity_state2 = self.gravity2  # Default gravity is pulling downwards
+        #self.player_size2 = 30
+        #self.player_x2 = (self.screen.get_width() * 2 // 6 ) -35 # Starting X position (2/5th of the width)
+        #self.player_y2 = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+        #self.player_velocity2 = 0  # Starting velocity (no initial speed)
+        #self.gravity2 = 0.3  # Gravity pulling downwards
+        #self.gravity_reversed2 = -0.3  # Gravity pulling upwards
+        #self.gravity_state2 = self.gravity2  # Default gravity is pulling downwards
 
 
-        self.start_flag=1
-        self.player_on_object=False
+        
+        #self.player_on_object=False
 
-        self.is_falling = True  # Is the player falling?
+        #self.is_falling = True  # Is the player falling?
         #self.ground_y = self.screen.get_height() - self.player_size
 
         # Platform settings
@@ -182,21 +193,13 @@ class GamePlay:
         fps_rect = fps_text.get_rect(topright=(self.screen.get_width() - 20, 20))  # Positioning to top-right
         self.screen.blit(fps_text, fps_rect)
 
-        # If gravity is reversed, adjust the player's y-position so they appear on the platform's bottom
-        #if self.gravity_state == self.gravity_reversed:
-            # Find the platform that the player is currently colliding with
-           # for platform in self.platforms:
-             #   if pygame.Rect(self.player_x, self.player_y, self.player_size, self.player_size).colliderect(platform):
-                    # If the player is above the platform (while moving up), set y position to the bottom of the platform
-                #    self.player_y = platform.bottom - self.player_size
-                   # break
-
                 
         # Draw player (as a red box)
-        pygame.draw.rect(self.screen, (255, 0, 0), (self.player_x, self.player_y, self.player_size, self.player_size))
+        #pygame.draw.rect(self.screen, (255, 0, 0), (self.player_x, self.player_y, self.player_size, self.player_size))
+        #pygame.draw.rect(self.screen, (255, 0, 0), (self.player.player_x, self.player.player_y, self.player.player_size, self.player.player_size))
          # Draw player2 (as a green box)
-        pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x2, self.player_y2, self.player_size2, self.player_size2))
-
+        #pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x2, self.player_y2, self.player_size2, self.player_size2))
+        self.player.draw(self.screen)
         # Draw the platforms (as blue boxes)
         for platform in self.platforms:
             pygame.draw.rect(self.screen, (0, 0, 255), platform)
@@ -215,77 +218,7 @@ class GamePlay:
 
         return time_left
     
-    def handle_collisions(self):
-        player_rect = pygame.Rect(self.player_x, self.player_y, self.player_size, self.player_size)
-
-        if self.player_velocity > 0:  # Falling
-            for platform in self.platforms:
-                platform_rect = platform
-                if player_rect.bottom  <= platform_rect.top + 15:
-                    if player_rect.bottom + 15 >= platform_rect.top:        #300
-                        if player_rect.right >= platform_rect.left  and player_rect.left <= platform_rect.right :
-                            self.player_y = platform_rect.top - self.player_size  # Align player on top of the platform
-                            self.player_velocity = 0  # Stop movement
-                            self.player_on_object = True  # Mark as standing on a platform
-
-                             # Calculate how many pixels left on the platform
-                            player_land_position = player_rect.left  # Player's left position
-                            platform_left = platform_rect.left  # Platform's left position
-                            platform_right = platform_rect.right  # Platform's right position
-                
-                            # Calculate how many pixels player has left on the platform to stand on
-                            remaining_space = platform_right - player_land_position  # e.g., 350 - 300 = 50 pixels left
-
-                            # Track platform speed (let's assume the platform moves at a speed of 'platform_speed')
-                            #platform_speed = 5  # Example: platform moves 5 pixels per frame to the left
-                
-                            # Calculate how many frames player can stay on the platform
-                            frames_to_fall = remaining_space / self.platform_speed   # 50 pixels / 5 pixels per frame = 10 frames
-                
-                            # Store this value, so you can use it later to detect when to change velocity to falling
-                            self.frames_on_platform = frames_to_fall
-                            self.is_falling=True
-                            return  # Exit once collision is handled
-                
-        elif self.player_velocity < 0:  # Moving upwards
-            for platform in self.platforms:
-                platform_rect = platform
-                if player_rect.top >= platform_rect.bottom - 15:
-                    if player_rect.top - 15 <= platform_rect.bottom:
-                        if player_rect.right >= platform_rect.left  and player_rect.left <= platform_rect.right :
-                            self.player_y = platform_rect.bottom  # Align player below the platform
-                            self.player_velocity = 0  # Stop movement
-                            self.player_on_object = True  # Mark as standing under a platform
-
-                             # Calculate how many pixels left on the platform
-                            player_land_position = player_rect.left  # Player's left position
-                            platform_left = platform_rect.left  # Platform's left position
-                            platform_right = platform_rect.right  # Platform's right position
-
-                            # Calculate how many pixels player has left on the platform to stand on
-                            remaining_space = platform_right - player_land_position  # e.g., 350 - 300 = 50 pixels left
-
-                            # Track platform speed (let's assume the platform moves at a speed of 'platform_speed')
-                            #platform_speed = 5  # Example: platform moves 5 pixels per frame to the left
-                
-                            # Calculate how many frames player can stay on the platform
-                            frames_to_fall = remaining_space / self.platform_speed   # 50 pixels / 5 pixels per frame = 10 frames
-                
-                            # Store this value, so you can use it later to detect when to change velocity to falling
-                            self.frames_on_platform = frames_to_fall
-                            self.is_falling=False
-                            return  # Exit once collision is handled
-
-     
-    
-            
-    def update_gravity(self):
-        """Handles gravity change only when spacebar is pressed."""
-        if self.gravity_state == self.gravity:
-            self.gravity_state = self.gravity_reversed
-        else:
-            self.gravity_state = self.gravity
-
+    #Main game logic loop
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -294,62 +227,116 @@ class GamePlay:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Press 'P' to pause
-                        return 2  # Switch to Pause menu
+                        #return 2  # Switch to Pause menu
+                        self.paused = not self.paused 
+                        if self.paused:
+                            self.mainmenu=0
+                            self.pause_game() 
+                            if self.mainmenu == 1:
+                                return 0          
                     elif event.key == pygame.K_ESCAPE:  # Press 'Escape' to go to main menu
                         return 0  # Exit game and go back to main menu
                     elif event.key == pygame.K_SPACE: #and not self.is_falling:  # Change gravity when on platform
-                        if self.player_on_object:                       
-                            self.update_gravity()
-                            self.player_on_object=False
+                        if self.player.player_on_object:                       
+                            self.player.update_gravity()
+                            self.player.player_on_object=False
 
-            if self.start_flag == 0:
+           
+            if not self.paused:    
+
+                if self.start_flag == 0:
             # Handle player collision with platforms (player stops at platform)
-                if not self.player_velocity == 0:
-                    self.handle_collisions()
-            else:
-                self.start_flag = 0
+                    if not self.player.player_velocity == 0:
+                        self.player.handle_collisions(self.platforms,5)
+                else:
+                    self.start_flag = 0
             
 
-            if not  self.player_on_object: 
+                if not  self.player.player_on_object: 
             # Apply gravity to make the player move up or down
-                if self.gravity_state == self.gravity:  # Gravity pulling down
-                    self.player_velocity += self.gravity  # Increase velocity by gravity value
-                    if self.player_velocity > 8:  # Cap the velocity
-                        self.player_velocity = 7.7
-                elif self.gravity_state == self.gravity_reversed:  # Gravity pulling up
-                    self.player_velocity -= self.gravity  # Decrease velocity by gravity value
-                    if self.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
-                        self.player_velocity = -7.7
-            else:
-                self.frames_on_platform -=1
-
-                if self.is_falling:
-                    if self.frames_on_platform+10 <= 0:
-                        self.player_on_object = False
-                        self.player_velocity = 0.3  # Set velocity to falling (positive velocity)
-                        self.frames_on_platform = 0  # Reset frames
+                    if self.player.gravity_state == self.player.gravity:  # Gravity pulling down
+                        self.player.player_velocity += self.player.gravity  # Increase velocity by gravity value
+                        if self.player.player_velocity > 8:  # Cap the velocity
+                            self.player.player_velocity = 7.7
+                    elif self.player.gravity_state == self.player.gravity_reversed:  # Gravity pulling up
+                        self.player.player_velocity -= self.player.gravity  # Decrease velocity by gravity value
+                        if self.player.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
+                            self.player.player_velocity = -7.7
                 else:
-                    if self.frames_on_platform+10 <= 0:
-                        self.player_on_object = False
-                        self.player_velocity = -0.3  # Set velocity to floating (negative velocity)
-                        self.frames_on_platform = 0  # Reset frames 
+                    self.player.frames_on_platform -=1
+
+                    if self.player.is_falling:
+                        if self.player.frames_on_platform+10 <= 0:
+                            self.player.player_on_object = False
+                            self.player.player_velocity = 0.3  # Set velocity to falling (positive velocity)
+                            self.player.frames_on_platform = 0  # Reset frames
+                    else:
+                        if self.player.frames_on_platform+10 <= 0:
+                            self.player.player_on_object = False
+                            self.player.player_velocity = -0.3  # Set velocity to floating (negative velocity)
+                            self.player.frames_on_platform = 0  # Reset frames 
                         
 
             # Update the player's position based on velocity
-            if not self.player_on_object:
-                self.player_y += self.player_velocity
+                if not self.player.player_on_object:
+                    self.player.player_y += self.player.player_velocity
 
             # Update the movement of platforms
-            self.move_platforms()
+                self.move_platforms()
 
                 # Optionally, remove platforms that go off-screen (on the left side)
-            self.platforms = [platform for platform in self.platforms if platform.right > 0]
+                self.platforms = [platform for platform in self.platforms if platform.right > 0]
 
-            if len(self.platforms) == 0 or self.platforms[-1].right <= self.screen.get_width():
-                self.create_platforms()
+                if len(self.platforms) == 0 or self.platforms[-1].right <= self.screen.get_width():
+                    self.create_platforms()
             # Draw the game elements
-            self.draw()
-            pygame.display.update()
+                self.draw()
+                pygame.display.update()
 
             # Cap the frame rate
-            self.clock.tick(60)  # 60 FPS limit
+                self.clock.tick(60)  # 60 FPS limit
+
+
+    # PAUSE MENU FUNCTIONS START------------ 
+    def draw_pause_screen(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render("PAUSED", True, (255, 0, 0))
+        self.screen.blit(text, (self.screen.get_width() // 2 - text.get_width() // 2, self.screen.get_height() // 3))
+
+        resume_text = font.render("Press 'P' to Resume", True, (255, 255, 255))
+        self.screen.blit(resume_text, (self.screen.get_width() // 2 - resume_text.get_width() // 2, self.screen.get_height() // 2))
+
+        exit_text = font.render("Press 'ESC' to Exit", True, (255, 255, 255))
+        self.screen.blit(exit_text, (self.screen.get_width() // 2 - exit_text.get_width() // 2, self.screen.get_height() // 1.5))
+
+    def draw_game_with_pause_overlay(self):
+        # Draw the game as usual (background, player, platforms, etc.)
+        self.draw()
+
+        # Create a semi-transparent overlay for the frozen effect
+        overlay_surface = pygame.Surface(self.screen.get_size())  # Full screen overlay
+        overlay_surface.set_alpha(128)  # Set transparency (0-255 range)
+        overlay_surface.fill((0, 0, 0))  # Black color with transparency
+        self.screen.blit(overlay_surface, (0, 0))  # Draw the overlay on top of the game
+        # Draw the pause screen (on top of the overlay)
+        self.draw_pause_screen()
+    
+    def pause_game(self):
+        #Handles the pause state.
+        while self.paused:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:  # Press 'P' again to resume
+                        self.paused = False
+                    elif event.key == pygame.K_ESCAPE:  # Press 'Escape' to go to main menu
+                        self.paused = False
+                        self.mainmenu = 1
+                        return 0  # Exit game
+
+            self.draw_game_with_pause_overlay()           
+            pygame.display.update()
+            self.clock.tick(60)  
+     # PAUSE MENU FUNCTIONS END------------   

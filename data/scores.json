@@ -7,7 +7,7 @@
     {
         "name": "Alice",
         "score": 120,
-        "time_survived": 30
+        "time_survived": "mars"
     },
     {
         "name": "Bob",
