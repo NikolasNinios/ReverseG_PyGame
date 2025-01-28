@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-class PauseMenu:
+class ResultsMenu:
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("Arial", 40)

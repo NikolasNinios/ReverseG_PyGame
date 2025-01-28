@@ -2,7 +2,8 @@ import pygame
 import sys
 from main_menu import MainMenu
 from game_play import GamePlay
-from pause_menu import PauseMenu
+from results_menu import ResultsMenu
+import globals  # Import your global variables and functions
 
 # Initialize Pygame
 pygame.init()
@@ -44,18 +45,16 @@ def game_loop():
         main_menu = MainMenu(screen)
         current_state = main_menu.run()
     
-    # Gameplay
+    # Gameplay 1player
     elif current_state == PLAY:
-        game_play = GamePlay(screen)
+        game_play = GamePlay(screen, globals.multiplayer)
         current_state = game_play.run()
-    
+   
     # Pause menu
     elif current_state == RESULTS:
-        pause_menu = PauseMenu(screen)
-        current_state = pause_menu.run()
+        results_menu = ResultsMenu(screen)
+        current_state = results_menu.run()
 
-         # Cap the frame rate
-    #clock.tick(fps)
 
 # Run the game loop
 if __name__ == "__main__":

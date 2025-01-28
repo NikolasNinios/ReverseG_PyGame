@@ -5,58 +5,34 @@ import math
 from playerCls import playerCls 
 
 class GamePlay:
-    def __init__(self, screen):
+    def __init__(self, screen,numofplayers):
         self.screen = screen
         self.font = pygame.font.SysFont("Arial", 30)  # Larger font for score, etc.
         self.fps_font = pygame.font.SysFont("Arial", 15)  # Smaller font for FPS display
         self.clock = pygame.time.Clock()
+        self.start_flag = 1 # for the start only cause the player always start with 0 velocity in the first frame
+        self.paused = False #for pause menu
+
         self.running = True
         self.test123 = True
         self.testfrist = True
-        self.start_flag = 1 
-        self.paused = False
 
-        #self.player_on_object= False # check if player is on object so he can jump
-        #self.is_falling = True
-        
+        #initialize 1 player
+        self.player1 = playerCls(self.screen,1)
 
-        self.player = playerCls(self.screen)
-        
-
-        # Player settings
-        #self.player_size = 30
-        #self.player.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
-        #self.player.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
-        #self.player_velocity = 0  # Starting velocity (no initial speed)
-        #self.gravity = 0.3  # Gravity pulling downwards
-        #self.gravity_reversed = -0.3  # Gravity pulling upwards
-        #self.gravity_state = self.gravity  # Default gravity is pulling downwards
-        #self.start_flag=1
-        #self.player_on_object=False
-
-        #self.player_size2 = 30
-        #self.player_x2 = (self.screen.get_width() * 2 // 6 ) -35 # Starting X position (2/5th of the width)
-        #self.player_y2 = self.screen.get_height() // 2  # Start in the middle of the screen vertically
-        #self.player_velocity2 = 0  # Starting velocity (no initial speed)
-        #self.gravity2 = 0.3  # Gravity pulling downwards
-        #self.gravity_reversed2 = -0.3  # Gravity pulling upwards
-        #self.gravity_state2 = self.gravity2  # Default gravity is pulling downwards
-
+        #initialize 2 player
+        if numofplayers == 2:
+            self.SecondPlayer = True
+            self.player2 = playerCls(self.screen,2)
+        else:
+            self.SecondPlayer = False
 
         
-        #self.player_on_object=False
-
-        #self.is_falling = True  # Is the player falling?
-        #self.ground_y = self.screen.get_height() - self.player_size
 
         # Platform settings
         self.platforms = []  # List to hold platforms
         self.create_platforms()
         self.platform_speed = 5
-
-        # Countdown settings
-        self.countdown_font = pygame.font.SysFont("Arial", 50)
-        self.start_time = pygame.time.get_ticks()
 
  
     def create_platforms(self):
@@ -67,9 +43,9 @@ class GamePlay:
     
         if self.testfrist:
 
-            #platform_width = random.randint(100,200)  # Random width for platforms
+            platform_width = 1024  # Random width for platforms
             #platform_height = 20  # Set a fixed height for the platform
-            platform_x = self.screen.get_width()-500  # Start at the right side of the screen
+            platform_x = self.screen.get_width()-1024  # Start at the right side of the screen
             platform_y = 620
             self.testfrist = False    
         else:
@@ -199,27 +175,23 @@ class GamePlay:
         #pygame.draw.rect(self.screen, (255, 0, 0), (self.player.player_x, self.player.player_y, self.player.player_size, self.player.player_size))
          # Draw player2 (as a green box)
         #pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x2, self.player_y2, self.player_size2, self.player_size2))
-        self.player.draw(self.screen)
+        self.player1.draw(self.screen,(255, 0, 0))
+
+        if self.SecondPlayer:
+            self.player2.draw(self.screen,(0, 0, 255))
+
         # Draw the platforms (as blue boxes)
         for platform in self.platforms:
             pygame.draw.rect(self.screen, (0, 0, 255), platform)
-
-    def display_countdown(self):
-        # Countdown from 3 to 1
-        time_left = (pygame.time.get_ticks() - self.start_time) // 1000  # Time in seconds
-        if time_left < 3:
-            countdown_text = self.countdown_font.render(str(3 - time_left), True, (255, 255, 255))
-            self.screen.blit(countdown_text, (self.screen.get_width() // 2 - countdown_text.get_width() // 2, self.screen.get_height() // 3))
-
-        # Show "GO!" after countdown is finished
-        elif time_left == 3:
-            go_text = self.countdown_font.render("GO!", True, (255, 255, 255))
-            self.screen.blit(go_text, (self.screen.get_width() // 2 - go_text.get_width() // 2, self.screen.get_height() // 3))
-
-        return time_left
     
+
     #Main game logic loop
     def run(self):
+        
+        self.show_instructions()  # Show instructions before starting the game
+        self.wait_for_keypress()  # Wait for key press to continue with the game
+
+
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -236,50 +208,89 @@ class GamePlay:
                                 return 0          
                     elif event.key == pygame.K_ESCAPE:  # Press 'Escape' to go to main menu
                         return 0  # Exit game and go back to main menu
-                    elif event.key == pygame.K_SPACE: #and not self.is_falling:  # Change gravity when on platform
-                        if self.player.player_on_object:                       
-                            self.player.update_gravity()
-                            self.player.player_on_object=False
+                    elif event.key == pygame.K_r: #and not self.is_falling:  # Change gravity when on platform
+                        if self.player1.player_on_object:                       
+                           self.player1.update_gravity()
+                           self.player1.player_on_object=False
+                    elif event.key == pygame.K_b and self.SecondPlayer:
+                        if self.player2.player_on_object:                       
+                           self.player2.update_gravity()
+                           self.player2.player_on_object=False
 
            
-            if not self.paused:    
+            if not self.paused:  
 
                 if self.start_flag == 0:
-            # Handle player collision with platforms (player stops at platform)
-                    if not self.player.player_velocity == 0:
-                        self.player.handle_collisions(self.platforms,5)
+                # Handle player collision with platforms (player stops at platform)
+                    if not self.player1.player_velocity == 0:
+                        self.player1.handle_collisions(self.platforms,5)
+                    if self.SecondPlayer:
+                        if not self.player2.player_velocity == 0:
+                            self.player2.handle_collisions(self.platforms,5)
                 else:
-                    self.start_flag = 0
+                    self.start_flag = 0  
+
+                if self.SecondPlayer:
+                    if not  self.player2.player_on_object: 
+                # Apply gravity to make the player move up or down
+                        if self.player2.gravity_state == self.player2.gravity:  # Gravity pulling down
+                           self.player2.player_velocity += self.player2.gravity  # Increase velocity by gravity value
+                           if self.player2.player_velocity > 8:  # Cap the velocity
+                              self.player2.player_velocity = 7.7
+                        elif self.player2.gravity_state == self.player2.gravity_reversed:  # Gravity pulling up
+                             self.player2.player_velocity -= self.player2.gravity  # Decrease velocity by gravity value
+                             if self.player2.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
+                                self.player2.player_velocity = -7.7
+                    else:
+                        self.player2.frames_on_platform -=1
+
+                        if self.player2.is_falling:
+                            if self.player2.frames_on_platform+10 <= 0:
+                                self.player2.player_on_object = False
+                                self.player2.player_velocity = 0.3  # Set velocity to falling (positive velocity)
+                                self.player2.frames_on_platform = 0  # Reset frames
+                        else:
+                            if self.player2.frames_on_platform+10 <= 0:
+                                self.player2.player_on_object = False
+                                self.player2.player_velocity = -0.3  # Set velocity to floating (negative velocity)
+                                self.player2.frames_on_platform = 0  # Reset frames 
+                        
+                    # Update the player's position based on velocity
+                    if not self.player2.player_on_object:
+                        self.player2.player_y += self.player2.player_velocity
+           
+                
+                
             
 
-                if not  self.player.player_on_object: 
-            # Apply gravity to make the player move up or down
-                    if self.player.gravity_state == self.player.gravity:  # Gravity pulling down
-                        self.player.player_velocity += self.player.gravity  # Increase velocity by gravity value
-                        if self.player.player_velocity > 8:  # Cap the velocity
-                            self.player.player_velocity = 7.7
-                    elif self.player.gravity_state == self.player.gravity_reversed:  # Gravity pulling up
-                        self.player.player_velocity -= self.player.gravity  # Decrease velocity by gravity value
-                        if self.player.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
-                            self.player.player_velocity = -7.7
+                if not  self.player1.player_on_object: 
+                # Apply gravity to make the player move up or down
+                    if self.player1.gravity_state == self.player1.gravity:  # Gravity pulling down
+                        self.player1.player_velocity += self.player1.gravity  # Increase velocity by gravity value
+                        if self.player1.player_velocity > 8:  # Cap the velocity
+                            self.player1.player_velocity = 7.7
+                    elif self.player1.gravity_state == self.player1.gravity_reversed:  # Gravity pulling up
+                        self.player1.player_velocity -= self.player1.gravity  # Decrease velocity by gravity value
+                        if self.player1.player_velocity < -8:  # Cap the velocity (negative for reversed gravity)
+                            self.player1.player_velocity = -7.7
                 else:
-                    self.player.frames_on_platform -=1
+                    self.player1.frames_on_platform -=1
 
-                    if self.player.is_falling:
-                        if self.player.frames_on_platform+10 <= 0:
-                            self.player.player_on_object = False
-                            self.player.player_velocity = 0.3  # Set velocity to falling (positive velocity)
-                            self.player.frames_on_platform = 0  # Reset frames
+                    if self.player1.is_falling:
+                        if self.player1.frames_on_platform+10 <= 0:
+                            self.player1.player_on_object = False
+                            self.player1.player_velocity = 0.3  # Set velocity to falling (positive velocity)
+                            self.player1.frames_on_platform = 0  # Reset frames
                     else:
-                        if self.player.frames_on_platform+10 <= 0:
-                            self.player.player_on_object = False
-                            self.player.player_velocity = -0.3  # Set velocity to floating (negative velocity)
-                            self.player.frames_on_platform = 0  # Reset frames 
+                        if self.player1.frames_on_platform+10 <= 0:
+                            self.player1.player_on_object = False
+                            self.player1.player_velocity = -0.3  # Set velocity to floating (negative velocity)
+                            self.player1.frames_on_platform = 0  # Reset frames 
                         
 
             # Update the player's position based on velocity
-                if not self.player.player_on_object:
-                    self.player.player_y += self.player.player_velocity
+                if not self.player1.player_on_object:
+                    self.player1.player_y += self.player1.player_velocity
 
             # Update the movement of platforms
                 self.move_platforms()
@@ -297,6 +308,45 @@ class GamePlay:
                 self.clock.tick(60)  # 60 FPS limit
 
 
+
+    #--------------------------------------------------------------------------------------------------------------------
+    #Game instructions Start ---------------
+    def draw_text(self, text, y, font_size=32, color=(255, 255, 255)):
+        font = pygame.font.SysFont('Arial', font_size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+
+        # Center the text horizontally and vertically
+        text_rect.centerx = self.screen.get_width() // 2
+        text_rect.y = y
+
+        self.screen.blit(text_surface, text_rect)
+
+    def show_instructions(self):
+        # Display instructions to the players
+        self.screen.fill((0, 0, 0))  # Fill the screen with black background
+        self.draw_text('Player 1 changes gravity with "R"', self.screen.get_height() // 2 - 50)
+        if self.SecondPlayer:
+            self.draw_text('Player 2 changes gravity with "B"', self.screen.get_height() // 2)
+        
+        self.draw_text('Press any key to start', self.screen.get_height() // 2 + 50)
+
+        pygame.display.update()
+
+    def wait_for_keypress(self):
+        # Wait for any key to be pressed to continue
+        waiting_for_key = True
+        while waiting_for_key:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    # Any key press will proceed
+                    waiting_for_key = False
+    #Game instructions End ---------------
+
+    #--------------------------------------------------------------------------------------------------------------------
     # PAUSE MENU FUNCTIONS START------------ 
     def draw_pause_screen(self):
         font = pygame.font.Font(None, 74)

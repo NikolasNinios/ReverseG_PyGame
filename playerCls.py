@@ -1,11 +1,17 @@
 import pygame
 
 class playerCls:
-    def __init__(self,screen):
+    def __init__(self,screen,numofplayers):
         self.screen = screen
         self.player_size = 30
-        self.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
-        self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+
+        if numofplayers == 2:
+            self.player_x = (self.screen.get_width() * 2 // 6 ) -80 # Starting X position (2/5th of the width)
+            self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+        else:
+            self.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
+            self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+
         self.player_velocity = 0  # Starting velocity (no initial speed)
         self.gravity = 0.3  # Gravity pulling downwards
         self.gravity_reversed = -0.3  # Gravity pulling upwards
@@ -14,9 +20,9 @@ class playerCls:
         self.is_falling = True  # Is the player falling?
         self.frames_on_platform = 0 #time left on platform so it can calculate the score
 
-    def draw(self, screen):
+    def draw(self, screen, color):
         """Draw the player on the screen."""
-        pygame.draw.rect(screen, (255, 0, 0), (self.player_x, self.player_y, self.player_size, self.player_size))
+        pygame.draw.rect(screen, color, (self.player_x, self.player_y, self.player_size, self.player_size))
 
 
     def handle_collisions(self,platforms,platform_speed):
