@@ -169,12 +169,9 @@ class MainMenu:
 
         
                          
-
     def gameDiff(self,difficulty):   
         """Update difficulty variable and highlight the selected difficulty."""
         globals.set_difficulty(difficulty)  # Update the global variable
-
-    
 
     def run(self):
         self.draw()

@@ -1,32 +1,12 @@
 [
     {
         "name": "RED",
-        "score": 140.89,
-        "diff": "Jupiter"
-    },
-    {
-        "name": "BLUE",
-        "score": 77.56,
-        "diff": "Jupiter"
+        "score": 177.83333333333331,
+        "diff": "Earth"
     },
     {
         "name": "RED",
-        "score": 0,
-        "diff": "Jupiter"
-    },
-    {
-        "name": "RED",
-        "score": 89.77777777777777,
-        "diff": "Jupiter"
-    },
-    {
-        "name": "RED",
-        "score": 0,
-        "diff": "Jupiter"
-    },
-    {
-        "name": "RED",
-        "score": 160.33333333333331,
-        "diff": "Jupiter"
+        "score": 20.0,
+        "diff": "Mars"
     }
 ]
