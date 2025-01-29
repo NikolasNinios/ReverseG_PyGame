@@ -4,6 +4,7 @@ import random
 import math
 from playerCls import playerCls 
 from platformCls import platformCls 
+from gamebackground import Background 
 import globals  # Import your global variables and functions
 
 class GamePlay:
@@ -15,6 +16,8 @@ class GamePlay:
         self.start_flag = 1 # for the start only cause the player always start with 0 velocity in the first frame
         self.paused = False #for pause menu
         self.running = True # for loop to start
+         # Create the background
+        self.bg = Background(self.screen, 'assets/images/stageBck.png', speed=2)  # Adjust the speed to your liking
 
         #initialize 1 player
         self.player1 = playerCls(self.screen,1)
@@ -33,7 +36,11 @@ class GamePlay:
         self.platforms.append(self.initplatform.platform_rect)
      
     def draw(self):
-        self.screen.fill((0, 0, 0))
+        # Update and draw the background
+        self.bg.update()  # Move the background
+        self.bg.draw()  # Draw the background
+
+        #self.screen.fill((0, 0, 0))
         # Your game elements go here (player, obstacles, etc.)
         score_text = self.font.render(f"Red Score: {self.player1.totalPoints:.2f}", True, (255, 255, 255))
         self.screen.blit(score_text, (10, 20))
@@ -55,16 +62,12 @@ class GamePlay:
 
         # Draw the platforms (as blue boxes)
         for platform in self.platforms:           
-            pygame.draw.rect(self.screen, (0, 0, 255), platform)
+            pygame.draw.rect(self.screen, (100, 100, 100), platform)
     
     def move_platforms(self,platformsList):
         # Move each platform left by 5 pixels per frame
         for platform in platformsList:
             platform.x -= globals.platformVelocity # Move platform to the left 
-
-    def draw_platforms(self):
-        # Draw all platforms on the screen
-            pygame.draw.rect(self.screen, (0, 255, 0), self.platform_rect)  # Green platforms
 
     #Main game logic loop
     def run(self):
@@ -203,6 +206,10 @@ class GamePlay:
                     self.running = False
                     return {"player1_score": self.player1.totalPoints}
 
+            self.player1.update_movement()
+            if self.SecondPlayer:
+                self.player2.update_movement()
+                
             # Draw the game elements
             self.draw()
             pygame.display.update()

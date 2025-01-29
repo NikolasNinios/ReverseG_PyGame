@@ -13,7 +13,7 @@ platformVelocity = 5 #Global max speed based on difficulty
 platform_width = random.randint(150,300) # Global platofrom width based on diff
 upordownobject = "down"
 framesextraplat = 5
-diffistats = "MARS"
+diffistats = "Mars"
 
 
 def playersmode(multi):

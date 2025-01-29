@@ -9,11 +9,50 @@ class playerCls:
         if numofplayers == 2:
             self.player_x = (self.screen.get_width() * 2 // 6 ) -80 # Starting X position (2/5th of the width)
             self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+            self.player_images = [
+            pygame.image.load('assets/characters/blue/BB1.png'),
+            pygame.image.load('assets/characters/blue/BB2.png'),
+            pygame.image.load('assets/characters/blue/BB3.png'),
+            pygame.image.load('assets/characters/blue/BB4.png'),
+            pygame.image.load('assets/characters/blue/BB5.png'),
+            pygame.image.load('assets/characters/blue/BB6.png'),
+            pygame.image.load('assets/characters/blue/BB7.png'),
+            ]
+            self.player_images_rev = [
+            pygame.image.load('assets/characters/blue/RevB1.png'),
+            pygame.image.load('assets/characters/blue/RevB2.png'),
+            pygame.image.load('assets/characters/blue/RevB3.png'),
+            pygame.image.load('assets/characters/blue/RevB4.png'),
+            pygame.image.load('assets/characters/blue/RevB5.png'),
+            pygame.image.load('assets/characters/blue/RevB6.png'),
+            pygame.image.load('assets/characters/blue/RevB7.png'),
+        ]
+         
         else:
             self.player_x = self.screen.get_width() * 2 // 6  # Starting X position (2/5th of the width)
             self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
+            self.player_images = [
+            pygame.image.load('assets/characters/red/RR1.png'),
+            pygame.image.load('assets/characters/red/RR2.png'),
+            pygame.image.load('assets/characters/red/RR3.png'),
+            pygame.image.load('assets/characters/red/RR4.png'),
+            pygame.image.load('assets/characters/red/RR5.png'),
+            pygame.image.load('assets/characters/red/RR6.png'),
+            pygame.image.load('assets/characters/red/RR7.png'),
+            ]
+            self.player_images_rev = [
+            pygame.image.load('assets/characters/red/RevR1.png'),
+            pygame.image.load('assets/characters/red/RevR2.png'),
+            pygame.image.load('assets/characters/red/RevR3.png'),
+            pygame.image.load('assets/characters/red/RevR4.png'),
+            pygame.image.load('assets/characters/red/RevR5.png'),
+            pygame.image.load('assets/characters/red/RevR6.png'),
+            pygame.image.load('assets/characters/red/RevR7.png'),
+        ]
 
         self.player_velocity = 0  # Starting velocity (no initial speed)
+        self.frame_counter = 0  # Frame counter to track frames passed
+        self.current_frame = 0  # Start with the first frame
         self.gravity = globals.gravity # Gravity pulling downwards
         self.gravity_reversed = - globals.gravity  # Gravity pulling upwards
         self.gravity_state = self.gravity  # Default gravity is pulling downwards
@@ -23,10 +62,27 @@ class playerCls:
         self.total_frames = 0 # we need total and left on platform to calculate the score
         self.totalPoints = 0 #points gather till he finish the game
         self.diseased = False
+        self.playerUporDown = 0 #1 is for up images 0 is down images
+
+    def update_movement(self):
+        #Update the player's animation frame."""
+        self.frame_counter += 1  # Increment the frame counter
+            
+        if self.frame_counter >= 2:  # Every 2 frames
+            self.current_frame = (self.current_frame + 1) % len(self.player_images)
+            self.frame_counter = 0  # Reset the frame counter
 
     def draw(self, screen, color):
         """Draw the player on the screen."""
-        pygame.draw.rect(screen, color, (self.player_x, self.player_y, self.player_size, self.player_size))
+        self.screen = screen
+        player_image = self.player_images[self.current_frame]
+        player_image_rev = self.player_images_rev[self.current_frame]
+
+        if self.playerUporDown == 0:
+            self.screen.blit(player_image, (self.player_x, self.player_y))
+        else:
+            self.screen.blit(player_image_rev, (self.player_x, self.player_y))
+        #pygame.draw.rect(screen, color, (self.player_x, self.player_y, self.player_size, self.player_size))
 
 
     def handle_collisions(self,platforms,platform_speed):
@@ -60,6 +116,7 @@ class playerCls:
                             self.total_frames = frames_to_fall
                             self.frames_on_platform = frames_to_fall + globals.framesextraplat 
                             self.is_falling=True
+                            self.playerUporDown = 0
                             return  # Exit once collision is handled
                 
         elif self.player_velocity < 0:  # Moving upwards
@@ -89,6 +146,7 @@ class playerCls:
                             # Store this value, so you can use it later to detect when to change velocity to falling
                             self.frames_on_platform = frames_to_fall + globals.framesextraplat
                             self.is_falling=False
+                            self.playerUporDown = 1
                             return  # Exit once collision is handled
 
     def update_gravity(self):
