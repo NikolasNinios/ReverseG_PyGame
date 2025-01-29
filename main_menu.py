@@ -9,6 +9,7 @@ class MainMenu:
         self.background = pygame.image.load('assets/images/menuBck.jpg')  # Load background image
         self.font = pygame.font.SysFont("Comic Sans MS", 40)  # Comic font for game title
         self.button_font = pygame.font.SysFont("Arial", 30)  # Regular font for buttons
+        self.clean_font = pygame.font.SysFont("Arial", 15)
         self.text_color = (255, 255, 255)  # White text color
         self.running = True
        
@@ -112,6 +113,8 @@ class MainMenu:
         """Display the top 20 scores."""
         self.screen.fill((0, 0, 0))  # Clear the screen with black background
 
+        score_text = self.clean_font.render("Press 'R' to clean the data", True, (255, 255, 255))
+        self.screen.blit(score_text, (10, 20))
         # Load top 20 scores from JSONManager
         top_scores = self.scoreCls.get_top_scores(top_n=20)
 
@@ -134,7 +137,7 @@ class MainMenu:
             # Iterate over the scores and split them into two columns
             for index, score_entry in enumerate(top_scores):
                 score_text = self.button_font.render(
-                    f"{index + 1}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['diff']}s",
+                    f"{index + 1}. {score_entry['name']} - {score_entry['score']:.2f} pts - {score_entry['diff']}",
                     True,
                     (255, 255, 255),  # White color
                 )
@@ -160,6 +163,12 @@ class MainMenu:
                if event.type == pygame.KEYDOWN:
                      if event.key == pygame.K_ESCAPE:  # ESC to return to main menu
                          return 
+                     if event.key == pygame.K_r:
+                         self.scoreCls.reset_scores()
+                         self.show_scores()
+
+        
+                         
 
     def gameDiff(self,difficulty):   
         """Update difficulty variable and highlight the selected difficulty."""

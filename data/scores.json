@@ -1,37 +1,12 @@
 [
     {
-        "name": "BLUE",
-        "score": 100,
-        "diff": 25
-    },
-    {
         "name": "RED",
-        "score": 120,
+        "score": 135.4,
         "diff": "MARS"
     },
     {
         "name": "BLUE",
-        "score": 150,
-        "diff": 45
-    },
-    {
-        "name": "RED",
-        "score": 100,
-        "diff": 25
-    },
-    {
-        "name": "BLUE",
-        "score": 120,
-        "diff": 30
-    },
-    {
-        "name": "BLUE",
-        "score": 150,
-        "diff": 45
-    },
-    {
-        "name": "BLUE",
-        "score": 100,
-        "diff": 25
+        "score": 133.4,
+        "diff": "MARS"
     }
 ]

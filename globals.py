@@ -13,6 +13,7 @@ platformVelocity = 5 #Global max speed based on difficulty
 platform_width = random.randint(150,300) # Global platofrom width based on diff
 upordownobject = "down"
 framesextraplat = 5
+diffistats = "MARS"
 
 
 def playersmode(multi):
@@ -36,6 +37,7 @@ def set_difficulty(level):
     global platformVelocity 
     global platform_width
     global framesextraplat
+    global diffistats
 
     difficulty = level
 
@@ -45,18 +47,21 @@ def set_difficulty(level):
         platformVelocity = 5 
         platform_width = random.randint(200,300)
         framesextraplat = 5 
+        diffistats = "Mars"
     elif difficulty == "Earth(E)":
         gravity = 0.3 * 1.2
         playerVelocity = 8 * 1.2 
         platformVelocity = 5 * 1.2 
         platform_width = random.randint(150,300)
         framesextraplat = 5 * 1.2
+        diffistats = "Earth"
     elif difficulty == "Jupiter(J)":
         gravity = 0.3 * 1.8
         playerVelocity = 8 * 1.8
         platformVelocity = 5  * 1.8
         platform_width = random.randint(150,250)
         framesextraplat = 5 * 1.8
+        diffistats = "Jupiter"
     else:
         gravity = 0.3 
         playerVelocity = 8 

@@ -16,10 +16,10 @@ class scoreCls:
                 json.dump([], file)  # Create an empty JSON array
             print(f"Created a new JSON file at {self.file_path}")
 
-    def save_score(self, player_name, score, time_survived):
+    def save_score(self, player_name, score, difficalty):
         """Save a player's score to the JSON file."""
         data = self.load_scores()  # Load existing data
-        data.append({"name": player_name, "score": score, "time_survived": time_survived})
+        data.append({"name": player_name, "score": score, "diff": difficalty})
 
         # Save updated data back to the JSON file
         with open(self.file_path, "w") as file:

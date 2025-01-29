@@ -9,15 +9,12 @@ import globals  # Import your global variables and functions
 class GamePlay:
     def __init__(self, screen,numofplayers):
         self.screen = screen
-        self.font = pygame.font.SysFont("Arial", 30)  # Larger font for score, etc.
+        self.font = pygame.font.SysFont("Arial", 20)  # Larger font for score, etc.
         self.fps_font = pygame.font.SysFont("Arial", 15)  # Smaller font for FPS display
         self.clock = pygame.time.Clock()
         self.start_flag = 1 # for the start only cause the player always start with 0 velocity in the first frame
         self.paused = False #for pause menu
         self.running = True # for loop to start
-
-        self.test123 = True
-        self.testfrist = True
 
         #initialize 1 player
         self.player1 = playerCls(self.screen,1)
@@ -38,18 +35,18 @@ class GamePlay:
     def draw(self):
         self.screen.fill((0, 0, 0))
         # Your game elements go here (player, obstacles, etc.)
-        score_text = self.font.render("Red Score: 0", True, (255, 255, 255))
-        self.screen.blit(score_text, (20, 20))
+        score_text = self.font.render(f"Red Score: {self.player1.totalPoints:.2f}", True, (255, 255, 255))
+        self.screen.blit(score_text, (10, 20))
         
         if self.SecondPlayer:
-            score_text = self.font.render("Blue Score: 0", True, (255, 255, 255))
-            self.screen.blit(score_text, (40, 40))
+            score_text = self.font.render(f"Blue Score: {self.player2.totalPoints:.2f}", True, (255, 255, 255))
+            self.screen.blit(score_text, (200, 20))
             
         # Display FPS in the top-right corner with smaller font
         fps_text = self.fps_font.render(f"FPS: {self.clock.get_fps():.2f}", True, (255, 255, 255))
         fps_rect = fps_text.get_rect(topright=(self.screen.get_width() - 20, 20))  # Positioning to top-right
         self.screen.blit(fps_text, fps_rect)
-
+     
         # Draw players
         self.player1.draw(self.screen,(255, 0, 0))
 
@@ -80,7 +77,7 @@ class GamePlay:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    sys.exit()                   
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # Press 'P' to pause
                         #return 2  # Switch to Pause menu
@@ -131,16 +128,16 @@ class GamePlay:
                         self.player2.frames_on_platform -= 1
 
                         if self.player2.is_falling:
-                            if self.player2.frames_on_platform :
+                            if self.player2.frames_on_platform <= 0:
                                 self.player2.player_on_object = False
                                 self.player2.player_velocity = globals.gravity  # Set velocity to falling (positive velocity)
-                                self.player2.calculate_score()
+                                #self.player2.calculate_score()
                                 self.player2.frames_on_platform = 0  # Reset frames
                         else:
-                            if self.player2.frames_on_platform :
+                            if self.player2.frames_on_platform <= 0:
                                 self.player2.player_on_object = False
                                 self.player2.player_velocity = -globals.gravity  # Set velocity to floating (negative velocity)
-                                self.player2.calculate_score()
+                                #self.player2.calculate_score()
                                 self.player2.frames_on_platform = 0  # Reset frames 
                         
                     # Update the player's position based on velocity
@@ -166,13 +163,13 @@ class GamePlay:
                         if self.player1.frames_on_platform <= 0:
                             self.player1.player_on_object = False
                             self.player1.player_velocity = globals.gravity  # Set velocity to falling (positive velocity)
-                            self.player1.calculate_score()
+                            #self.player1.calculate_score()
                             self.player1.frames_on_platform = 0  # Reset frames
                     else:
                         if self.player1.frames_on_platform <= 0:
                             self.player1.player_on_object = False
                             self.player1.player_velocity = - globals.gravity # Set velocity to floating (negative velocity)
-                            self.player1.calculate_score()
+                            #self.player1.calculate_score()
                             self.player1.frames_on_platform = 0  # Reset frames 
                         
                 # Update the player's position based on velocity
@@ -188,6 +185,23 @@ class GamePlay:
             if len(self.platforms) == 0 or self.platforms[-1].right <= self.screen.get_width():
                 self.initplatform = platformCls(self.screen,self.platforms,globals.platform_width)
                 self.platforms.append(self.initplatform.platform_rect)
+
+            if self.SecondPlayer:
+                if self.player2.player_y <=0 or self.player2.player_y >= 640:
+                    self.player2.diseased =True
+                if self.player1.player_y <=0 or self.player1.player_y >= 640:
+                    self.player1.diseased =True
+
+                if self.player1.diseased and self.player2.diseased:
+                    self.running = False
+                    return {"player1_score": self.player1.totalPoints, 
+                            "player2_score": self.player2.totalPoints}
+            else:
+                if self.player1.player_y <=0 or self.player1.player_y >= 640:
+                    self.player1.diseased =True
+                if self.player1.diseased:
+                    self.running = False
+                    return {"player1_score": self.player1.totalPoints}
 
             # Draw the game elements
             self.draw()

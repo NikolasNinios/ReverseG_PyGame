@@ -22,6 +22,7 @@ class playerCls:
         self.frames_on_platform = 0 #time left on platform so it can calculate the score
         self.total_frames = 0 # we need total and left on platform to calculate the score
         self.totalPoints = 0 #points gather till he finish the game
+        self.diseased = False
 
     def draw(self, screen, color):
         """Draw the player on the screen."""

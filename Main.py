@@ -45,12 +45,18 @@ def game_loop():
         main_menu = MainMenu(screen)
         current_state = main_menu.run()
     
-    # Gameplay 1player
+    # Gameplay 
     elif current_state == PLAY:
         game_play = GamePlay(screen, globals.multiplayer)
-        current_state = game_play.run()
+        result_data = game_play.run()
+        if result_data != 0:  # If gameplay returns result data, move to RESULTS
+            current_state = RESULTS
+            results_menu = ResultsMenu(screen, result_data)  # Pass scores to results menu
+            current_state = results_menu.run()
+        else:
+            current_state=0
    
-    # Pause menu
+    # Results menu
     elif current_state == RESULTS:
         results_menu = ResultsMenu(screen)
         current_state = results_menu.run()

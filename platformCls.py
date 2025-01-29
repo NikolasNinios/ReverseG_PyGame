@@ -25,10 +25,10 @@ class platformCls:
 
             # Calculate vertical difference (Δy) to determine the fall distance
             if globals.upordownobject == "down": 
-                platform_y = random.randint(340, 600)  # Random vertical position for platforms
+                platform_y = random.randint(350, 600)  # Random vertical position for platforms
                 globals.upordown("up")
             elif globals.upordownobject == "up" :
-               platform_y = random.randint(20, 300)  
+               platform_y = random.randint(40, 290)  
                globals.upordown("down")
             else:
                platform_y = random.randint(20, 600)  
