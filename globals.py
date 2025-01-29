@@ -1,12 +1,18 @@
 # Global Variables
 import pygame
+import random
 
 
 # Difficulty settings (default to False)
 difficulty = "Mars(A)"  # Can be "Easy", "Medium", or "Hard"
 music_muted = False # Global variable to track whether the music is muted or not
 multiplayer = 1 # Global variable to track multiplayer mode
-
+gravity = 0.3 # Global gravity based on difficulty
+playerVelocity = 8 #Global max speed based on difficulty
+platformVelocity = 5 #Global max speed based on difficulty
+platform_width = random.randint(150,300) # Global platofrom width based on diff
+upordownobject = "down"
+framesextraplat = 5
 
 
 def playersmode(multi):
@@ -14,15 +20,49 @@ def playersmode(multi):
     multiplayer = multi
     print(f"Difficulty set to {multiplayer}")
 
+def upordown(obj):
+    global upordownobject 
+    upordownobject = obj
 
 def set_difficulty(level):
     #Set the difficulty level based on user input.
-    #Mars is Easy
-    #Earth is Medium
-    #Jupiter is Hard
+    #Mars(A) is Easy
+    #Earth(E) is Medium
+    #Jupiter(J) is Hard
 
     global difficulty
+    global gravity  
+    global playerVelocity 
+    global platformVelocity 
+    global platform_width
+    global framesextraplat
+
     difficulty = level
+
+    if difficulty == "Mars(A)":
+        gravity = 0.3 
+        playerVelocity = 8 
+        platformVelocity = 5 
+        platform_width = random.randint(200,300)
+        framesextraplat = 5 
+    elif difficulty == "Earth(E)":
+        gravity = 0.3 * 1.2
+        playerVelocity = 8 * 1.2 
+        platformVelocity = 5 * 1.2 
+        platform_width = random.randint(150,300)
+        framesextraplat = 5 * 1.2
+    elif difficulty == "Jupiter(J)":
+        gravity = 0.3 * 1.8
+        playerVelocity = 8 * 1.8
+        platformVelocity = 5  * 1.8
+        platform_width = random.randint(150,250)
+        framesextraplat = 5 * 1.8
+    else:
+        gravity = 0.3 
+        playerVelocity = 8 
+        platformVelocity = 5 
+        platform_width = random.randint(200,300)
+
     print(f"Difficulty set to {difficulty}")
 
 

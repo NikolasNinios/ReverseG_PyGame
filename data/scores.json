@@ -1,37 +1,37 @@
 [
     {
-        "name": "Charlie",
+        "name": "BLUE",
         "score": 100,
-        "time_survived": 25
+        "diff": 25
     },
     {
-        "name": "Alice",
+        "name": "RED",
         "score": 120,
-        "time_survived": "mars"
+        "diff": "MARS"
     },
     {
-        "name": "Bob",
+        "name": "BLUE",
         "score": 150,
-        "time_survived": 45
+        "diff": 45
     },
     {
-        "name": "Charlie",
+        "name": "RED",
         "score": 100,
-        "time_survived": 25
+        "diff": 25
     },
     {
-        "name": "Alice",
+        "name": "BLUE",
         "score": 120,
-        "time_survived": 30
+        "diff": 30
     },
     {
-        "name": "Bob",
+        "name": "BLUE",
         "score": 150,
-        "time_survived": 45
+        "diff": 45
     },
     {
-        "name": "Charlie",
+        "name": "BLUE",
         "score": 100,
-        "time_survived": 25
+        "diff": 25
     }
 ]

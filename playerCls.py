@@ -1,4 +1,5 @@
 import pygame
+import globals  # Import your global variables and functions
 
 class playerCls:
     def __init__(self,screen,numofplayers):
@@ -13,12 +14,14 @@ class playerCls:
             self.player_y = self.screen.get_height() // 2  # Start in the middle of the screen vertically
 
         self.player_velocity = 0  # Starting velocity (no initial speed)
-        self.gravity = 0.3  # Gravity pulling downwards
-        self.gravity_reversed = -0.3  # Gravity pulling upwards
+        self.gravity = globals.gravity # Gravity pulling downwards
+        self.gravity_reversed = - globals.gravity  # Gravity pulling upwards
         self.gravity_state = self.gravity  # Default gravity is pulling downwards
         self.player_on_object= False # check if player is on object so he can jump
         self.is_falling = True  # Is the player falling?
         self.frames_on_platform = 0 #time left on platform so it can calculate the score
+        self.total_frames = 0 # we need total and left on platform to calculate the score
+        self.totalPoints = 0 #points gather till he finish the game
 
     def draw(self, screen, color):
         """Draw the player on the screen."""
@@ -53,7 +56,8 @@ class playerCls:
                             frames_to_fall = remaining_space / platform_speed   # 50 pixels / 5 pixels per frame = 10 frames
                 
                             # Store this value, so you can use it later to detect when to change velocity to falling
-                            self.frames_on_platform = frames_to_fall
+                            self.total_frames = frames_to_fall
+                            self.frames_on_platform = frames_to_fall + globals.framesextraplat 
                             self.is_falling=True
                             return  # Exit once collision is handled
                 
@@ -82,14 +86,21 @@ class playerCls:
                             frames_to_fall = remaining_space / platform_speed  # 50 pixels / 5 pixels per frame = 10 frames
                 
                             # Store this value, so you can use it later to detect when to change velocity to falling
-                            self.frames_on_platform = frames_to_fall
+                            self.frames_on_platform = frames_to_fall + globals.framesextraplat
                             self.is_falling=False
                             return  # Exit once collision is handled
 
     def update_gravity(self):
-    #"""Handles gravity change only when jump is pressed."""
+    #Handles gravity change only when jump is pressed.
         if self.gravity_state == self.gravity:
             self.gravity_state = self.gravity_reversed
         else:
             self.gravity_state = self.gravity
+
+    def calculate_score(self):
+      #calculate the score he gather based on how long player stayed on platform
+        if self.frames_on_platform < 10:
+            self.totalPoints = self.totalPoints + self.total_frames
+        else:
+            self.totalPoints = self.totalPoints + self.total_frames - self.frames_on_platform
      

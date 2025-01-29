@@ -134,7 +134,7 @@ class MainMenu:
             # Iterate over the scores and split them into two columns
             for index, score_entry in enumerate(top_scores):
                 score_text = self.button_font.render(
-                    f"{index + 1}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['time_survived']}s",
+                    f"{index + 1}. {score_entry['name']} - {score_entry['score']} pts - {score_entry['diff']}s",
                     True,
                     (255, 255, 255),  # White color
                 )
