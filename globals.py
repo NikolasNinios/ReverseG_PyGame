@@ -60,7 +60,7 @@ def set_difficulty(level):
         playerVelocity = 8 * 1.8
         platformVelocity = 5  * 1.8
         platform_width = random.randint(150,250)
-        framesextraplat = 5 * 1.8
+        framesextraplat = 5 
         diffistats = "Jupiter"
     else:
         gravity = 0.3 

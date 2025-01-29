@@ -1,92 +1,12 @@
 [
     {
         "name": "RED",
-        "score": 135.4,
-        "diff": "MARS"
-    },
-    {
-        "name": "BLUE",
-        "score": 133.4,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 0,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 0,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 257.19999999999993,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 73.0,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 405.8,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 397.0,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 225.4,
-        "diff": "MARS"
-    },
-    {
-        "name": "BLUE",
-        "score": 207.6,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 0,
-        "diff": "MARS"
-    },
-    {
-        "name": "BLUE",
-        "score": 163.6,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 12.0,
-        "diff": "MARS"
-    },
-    {
-        "name": "BLUE",
-        "score": 11.0,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 213.0,
-        "diff": "MARS"
-    },
-    {
-        "name": "BLUE",
-        "score": 219.6,
-        "diff": "MARS"
-    },
-    {
-        "name": "RED",
-        "score": 247.89,
+        "score": 140.89,
         "diff": "Jupiter"
     },
     {
         "name": "BLUE",
-        "score": 163.0,
+        "score": 77.56,
         "diff": "Jupiter"
     },
     {
@@ -95,13 +15,18 @@
         "diff": "Jupiter"
     },
     {
-        "name": "BLUE",
-        "score": 35.0,
+        "name": "RED",
+        "score": 89.77777777777777,
         "diff": "Jupiter"
     },
     {
         "name": "RED",
-        "score": 710.8,
-        "diff": "Mars"
+        "score": 0,
+        "diff": "Jupiter"
+    },
+    {
+        "name": "RED",
+        "score": 160.33333333333331,
+        "diff": "Jupiter"
     }
 ]
